@@ -1,0 +1,10 @@
+auto crop
+scan if artifact is locked
+
+converting image to grayscale yields better output
+
+
+#best yet:
+-cv.threshold(img, 170, 255, cv.THRESH_BINARY)
+-(No grayscale)
+-config = r'--oem 3 --psm 12'

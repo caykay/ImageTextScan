@@ -29,14 +29,62 @@ OCR Engine modes:
 3 = Default, based on what is available.
 """
 
-myconfig = r'--oem 3 --psm 11'
+myconfig = r'--oem 3 --psm 12'
 
 wellPerformingConfigs = {
-    1: r'--oem 3 --psm 11'
+    1: r'--oem 3 --psm 11',
+    2: r'--oem 3 --psm 3',
+    3: r'--oem 3 --psm 1',
 }
 
-text_cropped = pytesseract.image_to_string(PIL.Image.open('cropped.png'), config=myconfig)
-text_cropped_1 = pytesseract.image_to_string(PIL.Image.open('cropped2.png'), config=myconfig)
-text_uncropped = pytesseract.image_to_string(PIL.Image.open('uncropped.1920x1280.png'), config=myconfig)
-# print(text_cropped + "\n\n\n"+ text_cropped_1)
-print(text_uncropped)
+# text_cropped = pytesseract.image_to_string(PIL.Image.open('cropped.png'), config=myconfig)
+# text_cropped_1 = pytesseract.image_to_string(PIL.Image.open('cropped2.png'), config=myconfig)
+# text_uncropped = pytesseract.image_to_string(PIL.Image.open('uncropped.1920x1080.png'), config=myconfig)
+# # print(text_cropped + "\n\n\n"+ text_cropped_1)
+# print(text_uncropped)
+
+# text1 = pytesseract.image_to_string(PIL.Image.open('1280x720.png'), config=myconfig)
+# text2 = pytesseract.image_to_string(PIL.Image.open('1440x900.png'), config=myconfig)
+# text3 = pytesseract.image_to_string(PIL.Image.open('1680x1050.png'), config=myconfig)
+
+# print(text2)
+cropped = "cropped.png"
+cropped1 = "cropped1.png"
+cropped2 = "cropped2.png"
+uncropped1 = "uncropped.1920x1080.png"
+uncropped2 = "1280x720.png"
+uncropped3 = "1440x900.png"
+uncropped4 = "1680x1050.png"
+
+img = cv.imread(cropped)
+# convert to grayscale
+# img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+# noise removal
+# noise = cv.medianBlur(img, 3)
+# image binarization
+_,img = cv.threshold(img, 170, 255, cv.THRESH_BINARY)
+# height, width = img.shape
+# print(width, height)
+
+## draw boxes on individual characters
+# boxes = pytesseract.image_to_boxes(img, config=myconfig)
+# print(boxes)
+# for box in boxes.splitlines():
+#     box = box.split(' ')
+#     x, y, w, h = int(box[1]), int(box[2]), int(box[3]), int(box[4])
+#     cv.rectangle(img, (x, height-y), (w, height-h), (255, 0, 0), 1)
+#     cv.putText(img, box[0], (x, height-y+25), cv.FONT_HERSHEY_COMPLEX, 1, (50, 50, 255), 2)
+
+# draw boxes on words
+data = pytesseract.image_to_data(img, config=myconfig, output_type=pytesseract.Output.DICT)
+print(data['text'])
+amountOfWords = len(data['text'])
+for i in range(amountOfWords):
+    if float(data['conf'][i]) > 30:
+        x, y, w, h = int(data['left'][i]), int(data['top'][i]), int(data['width'][i]), int(data['height'][i])
+        cv.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 1)
+        cv.putText(img, data['text'][i], (x, y), cv.FONT_HERSHEY_COMPLEX, 1, (50, 50, 255), 2)
+
+
+cv.imshow('img', img)
+cv.waitKey(0)
