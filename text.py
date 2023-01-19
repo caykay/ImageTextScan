@@ -35,6 +35,7 @@ wellPerformingConfigs = {
     1: r'--oem 3 --psm 11',
     2: r'--oem 3 --psm 3',
     3: r'--oem 3 --psm 1',
+    4: r'--oem 3 --psm 12',
 }
 
 # text_cropped = pytesseract.image_to_string(PIL.Image.open('cropped.png'), config=myconfig)
