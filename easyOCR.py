@@ -38,6 +38,28 @@ for detection in result:
     img = cv.rectangle(img, topLeft, bottomRight, (0, 255, 0), 2)
     img = cv.putText(img, text, topLeft, font, 0.7, (255, 0, 0), 1, cv.LINE_AA)
 
-print(memo)
-plt.imshow(img)
-plt.show()
+# print(memo)
+# plt.imshow(img)
+# plt.show()
+
+def textReader(img):
+    result = reader.readtext(img)
+    # DISPLAY IMAGE
+    topLeft = tuple(result[0][0][0])
+    bottomRight = tuple(result[0][0][2])
+    text = result[0][1]
+    font = cv.FONT_HERSHEY_SIMPLEX
+    # visualize
+    memo = []
+    for detection in result:
+        topLeft = tuple([int(var) for var in detection[0][0]])
+        bottomRight = tuple([int(var) for var in detection[0][2]])
+        text = detection[1]
+        memo.append(text)
+        img = cv.rectangle(img, topLeft, bottomRight, (0, 255, 0), 2)
+        img = cv.putText(img, text, topLeft, font, 0.7, (255, 0, 0), 1, cv.LINE_AA)
+
+    print(memo)
+    plt.imshow(img)
+    plt.show()
+
