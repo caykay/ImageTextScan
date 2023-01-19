@@ -1,6 +1,7 @@
 import cv2 as cv
 import pytesseract
 import PIL.Image
+from matplotlib import pyplot as plt
 
 """
 Python segmentation modes:
@@ -86,5 +87,5 @@ for i in range(amountOfWords):
         cv.putText(img, data['text'][i], (x, y), cv.FONT_HERSHEY_COMPLEX, 1, (50, 50, 255), 2)
 
 
-cv.imshow('img', img)
-cv.waitKey(0)
+plt.imshow(img)
+plt.show()
