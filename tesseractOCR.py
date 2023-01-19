@@ -1,6 +1,7 @@
 import cv2 as cv
 import pytesseract
 import PIL.Image
+from matplotlib import pyplot as plt
 
 """
 Python segmentation modes:
@@ -29,7 +30,7 @@ OCR Engine modes:
 3 = Default, based on what is available.
 """
 
-myconfig = r'--oem 3 --psm 12'
+myconfig = r'--oem 3 --psm 6'
 
 wellPerformingConfigs = {
     1: r'--oem 3 --psm 11',
@@ -57,13 +58,11 @@ uncropped2 = "1280x720.png"
 uncropped3 = "1440x900.png"
 uncropped4 = "1680x1050.png"
 
-img = cv.imread(cropped)
+img = cv.imread(uncropped4)
 # convert to grayscale
-# img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-# noise removal
-# noise = cv.medianBlur(img, 3)
+gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 # image binarization
-_,img = cv.threshold(img, 170, 255, cv.THRESH_BINARY)
+_,tresh = cv.threshold(gray, 0, 255, cv.THRESH_BINARY|cv.THRESH_OTSU)
 # height, width = img.shape
 # print(width, height)
 
@@ -77,7 +76,7 @@ _,img = cv.threshold(img, 170, 255, cv.THRESH_BINARY)
 #     cv.putText(img, box[0], (x, height-y+25), cv.FONT_HERSHEY_COMPLEX, 1, (50, 50, 255), 2)
 
 # draw boxes on words
-data = pytesseract.image_to_data(img, config=myconfig, output_type=pytesseract.Output.DICT)
+data = pytesseract.image_to_data(tresh, config=myconfig, output_type=pytesseract.Output.DICT, lang='eng')
 print(data['text'])
 amountOfWords = len(data['text'])
 for i in range(amountOfWords):
@@ -87,5 +86,5 @@ for i in range(amountOfWords):
         cv.putText(img, data['text'][i], (x, y), cv.FONT_HERSHEY_COMPLEX, 1, (50, 50, 255), 2)
 
 
-cv.imshow('img', img)
-cv.waitKey(0)
+plt.imshow(tresh, cmap='gray')
+plt.show()
