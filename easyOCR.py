@@ -38,9 +38,9 @@ for detection in result:
     img = cv.rectangle(img, topLeft, bottomRight, (0, 255, 0), 2)
     img = cv.putText(img, text, topLeft, font, 0.7, (255, 0, 0), 1, cv.LINE_AA)
 
-# print(memo)
-# plt.imshow(img)
-# plt.show()
+print(memo)
+plt.imshow(img)
+plt.show()
 
 def textReader(img):
     result = reader.readtext(img)
